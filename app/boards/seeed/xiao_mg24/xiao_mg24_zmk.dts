@@ -6,6 +6,9 @@
 
 #include <../boards/seeed/xiao_mg24/xiao_mg24.dts>
 
+/* Add D11..D18 to the upstream xiao_d connector (it only defines D0..D10). */
+#include "xiao_d_extension.dtsi"
+
 /*
  * Console stays on the upstream-chosen usart0 (PA8/PA9), which on the XIAO
  * MG24 is wired to the on-board SAMD11 USB-CDC bridge. xiao_serial (eusart1)

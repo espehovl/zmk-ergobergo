@@ -1,0 +1,40 @@
+/*
+ * Copyright (c) 2026 The ZMK Contributors
+ *
+ * SPDX-License-Identifier: MIT
+ *
+ * Extends the upstream Zephyr `xiao_d` connector (D0..D10) with the additional
+ * pins exposed on the XIAO MG24 module package (D11..D18). This file lives in
+ * the ZMK app tree so it does not require carrying a patch inside the gitignored
+ * `zephyr/` checkout.
+ *
+ * `gpio-map` is a property: redefining it on the referenced node fully replaces
+ * the upstream 11-entry list with the 19-entry list below. `gpio-map-mask` and
+ * `gpio-map-pass-thru` are unchanged from upstream so we leave them alone.
+ *
+ * Pin → SOC mapping is from the Seeed Studio "XIAO MG24" datasheet (silkscreen
+ * D11..D18 ↔ PA09, PA08, PB02, PB03, PB00, PB01, PA00, PD02). Keep this file in
+ * sync with the upstream connector if Zephyr ever extends it.
+ */
+
+&xiao_d {
+    gpio-map = <0  0 &gpioc 0 0>, /* D0  */
+               <1  0 &gpioc 1 0>, /* D1  */
+               <2  0 &gpioc 2 0>, /* D2  */
+               <3  0 &gpioc 3 0>, /* D3  */
+               <4  0 &gpioc 4 0>, /* D4  */
+               <5  0 &gpioc 5 0>, /* D5  */
+               <6  0 &gpioc 6 0>, /* D6  */
+               <7  0 &gpioc 7 0>, /* D7  */
+               <8  0 &gpioa 3 0>, /* D8  */
+               <9  0 &gpioa 4 0>, /* D9  */
+               <10 0 &gpioa 5 0>, /* D10 */
+               <11 0 &gpioa 9 0>, /* D11 PA09 */
+               <12 0 &gpioa 8 0>, /* D12 PA08 */
+               <13 0 &gpiob 2 0>, /* D13 PB02 */
+               <14 0 &gpiob 3 0>, /* D14 PB03 */
+               <15 0 &gpiob 0 0>, /* D15 PB00 */
+               <16 0 &gpiob 1 0>, /* D16 PB01 */
+               <17 0 &gpioa 0 0>, /* D17 PA00 */
+               <18 0 &gpiod 2 0>; /* D18 PD02 */
+};
