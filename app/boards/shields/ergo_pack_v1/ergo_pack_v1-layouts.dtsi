@@ -1,0 +1,56 @@
+/*
+ * Physical layout for a 10x4 ortho-style split grid (five columns per PCB half).
+ */
+
+#include <physical_layouts.dtsi>
+
+/ {
+    physical_layout0: physical_layout_0 {
+        compatible = "zmk,physical-layout";
+        display-name = "Default";
+
+        /* Keys in row-major order RC(r,c), r = 0..3, c = 0..9 */
+        keys  //                             w    h      x       y rot rx ry
+            = <&key_physical_attrs 56 56    0     0  0 0 0 >
+            , <&key_physical_attrs 56 56   56     0  0 0 0 >
+            , <&key_physical_attrs 56 56  112     0  0 0 0 >
+            , <&key_physical_attrs 56 56  168     0  0 0 0 >
+            , <&key_physical_attrs 56 56  224     0  0 0 0 >
+            , <&key_physical_attrs 56 56  354     0  0 0 0 >
+            , <&key_physical_attrs 56 56  410     0  0 0 0 >
+            , <&key_physical_attrs 56 56  466     0  0 0 0 >
+            , <&key_physical_attrs 56 56  522     0  0 0 0 >
+            , <&key_physical_attrs 56 56  578     0  0 0 0 >
+            , <&key_physical_attrs 56 56    0    62  0 0 0 >
+            , <&key_physical_attrs 56 56   56    62  0 0 0 >
+            , <&key_physical_attrs 56 56  112    62  0 0 0 >
+            , <&key_physical_attrs 56 56  168    62  0 0 0 >
+            , <&key_physical_attrs 56 56  224    62  0 0 0 >
+            , <&key_physical_attrs 56 56  354    62  0 0 0 >
+            , <&key_physical_attrs 56 56  410    62  0 0 0 >
+            , <&key_physical_attrs 56 56  466    62  0 0 0 >
+            , <&key_physical_attrs 56 56  522    62  0 0 0 >
+            , <&key_physical_attrs 56 56  578    62  0 0 0 >
+            , <&key_physical_attrs 56 56    0   124  0 0 0 >
+            , <&key_physical_attrs 56 56   56   124  0 0 0 >
+            , <&key_physical_attrs 56 56  112   124  0 0 0 >
+            , <&key_physical_attrs 56 56  168   124  0 0 0 >
+            , <&key_physical_attrs 56 56  224   124  0 0 0 >
+            , <&key_physical_attrs 56 56  354   124  0 0 0 >
+            , <&key_physical_attrs 56 56  410   124  0 0 0 >
+            , <&key_physical_attrs 56 56  466   124  0 0 0 >
+            , <&key_physical_attrs 56 56  522   124  0 0 0 >
+            , <&key_physical_attrs 56 56  578   124  0 0 0 >
+            , <&key_physical_attrs 56 56    0   186  0 0 0 >
+            , <&key_physical_attrs 56 56   56   186  0 0 0 >
+            , <&key_physical_attrs 56 56  112   186  0 0 0 >
+            , <&key_physical_attrs 56 56  168   186  0 0 0 >
+            , <&key_physical_attrs 56 56  224   186  0 0 0 >
+            , <&key_physical_attrs 56 56  354   186  0 0 0 >
+            , <&key_physical_attrs 56 56  410   186  0 0 0 >
+            , <&key_physical_attrs 56 56  466   186  0 0 0 >
+            , <&key_physical_attrs 56 56  522   186  0 0 0 >
+            , <&key_physical_attrs 56 56  578   186  0 0 0 >
+            ;
+    };
+};

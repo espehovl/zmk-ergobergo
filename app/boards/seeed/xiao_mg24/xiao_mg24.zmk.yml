@@ -1,0 +1,12 @@
+# Copyright (c) 2026 The ZMK Contributors
+# SPDX-License-Identifier: MIT
+
+file_format: "1"
+id: xiao_mg24//zmk
+name: Seeed Studio XIAO MG24
+type: board
+arch: arm
+outputs:
+  - ble
+url: https://wiki.seeedstudio.com/xiao-mg24-getting-started/
+exposes: [seeed_xiao]

@@ -1,0 +1,28 @@
+#include "ergo_pack_v1.dtsi"
+
+&kscan0 {
+    col-gpios
+        = <&xiao_d  4 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
+        , <&xiao_d  5 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
+        , <&xiao_d  6 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
+        , <&xiao_d 15 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
+        , <&xiao_d 10 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
+        , <&xiao_d  9 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
+        ;
+};
+
+&default_transform {
+    col-offset = <6>;
+};
+
+&right_encoder {
+    status = "okay";
+};
+
+&sensors {
+    sensors = <&right_encoder>;
+    /* One trigger per mechanical detent (~20 on EC11). For &mmv each trigger queues
+     * a press/release pair tap_ms apart in behavior_sensor_rotate_common; finer values
+     * (40+) saturate the queue and feel slow/laggy rather than smoother. */
+    triggers-per-rotation = <20>;
+};

@@ -16,6 +16,8 @@ static const struct behavior_driver_api behavior_sensor_rotate_var_driver_api = 
     .sensor_binding_accept_data = zmk_behavior_sensor_rotate_common_accept_data,
     .sensor_binding_process = zmk_behavior_sensor_rotate_common_process};
 
+/* Init after flash so bindings to &msc (POST_KERNEL default) do not violate Zephyr's
+ * DEVICE_INIT_VALIDATE_INIT_ORDER vs e.g. SOC flash controller on MG24. */
 #define SENSOR_ROTATE_VAR_INST(n)                                                                  \
     static struct behavior_sensor_rotate_config behavior_sensor_rotate_var_config_##n = {          \
         .cw_binding = {.behavior_dev = DEVICE_DT_NAME(DT_INST_PHANDLE_BY_IDX(n, bindings, 0))},    \
@@ -26,7 +28,7 @@ static const struct behavior_driver_api behavior_sensor_rotate_var_driver_api = 
     static struct behavior_sensor_rotate_data behavior_sensor_rotate_var_data_##n = {};            \
     BEHAVIOR_DT_INST_DEFINE(n, NULL, NULL, &behavior_sensor_rotate_var_data_##n,                   \
                             &behavior_sensor_rotate_var_config_##n, POST_KERNEL,                   \
-                            CONFIG_KERNEL_INIT_PRIORITY_DEFAULT,                                   \
+                            CONFIG_APPLICATION_INIT_PRIORITY,                                      \
                             &behavior_sensor_rotate_var_driver_api);
 
 DT_INST_FOREACH_STATUS_OKAY(SENSOR_ROTATE_VAR_INST)

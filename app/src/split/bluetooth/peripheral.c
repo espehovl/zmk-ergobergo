@@ -63,8 +63,21 @@ static int start_advertising(bool low_duty) {
 
     if (bt_addr_le_cmp(&central_addr, BT_ADDR_LE_NONE) != 0) {
         is_bonded = true;
+#if IS_ENABLED(CONFIG_BT_SILABS_EFR32)
+        /* The Silicon Labs xg24 controller (liblinklayer.a) rejects the
+         * legacy directed-connectable HCI command with status 0x45
+         * "packet too long". The host emits intervals of 0 for high-duty
+         * directed adv (BT_LE_ADV_CONN_DIR), and the LL's
+         * ll_advSetParameters then computes max_event_len > max_int*625
+         * = 0 -> always fails. Force the low-duty form which uses
+         * BT_GAP_ADV_FAST_INT_MIN_2/MAX_2 (160..240 = 100..150 ms) and
+         * passes the LL's check. */
+        struct bt_le_adv_param adv_param = *BT_LE_ADV_CONN_DIR_LOW_DUTY(&central_addr);
+        (void)low_duty;
+#else
         struct bt_le_adv_param adv_param = low_duty ? *BT_LE_ADV_CONN_DIR_LOW_DUTY(&central_addr)
                                                     : *BT_LE_ADV_CONN_DIR(&central_addr);
+#endif
         return bt_le_adv_start(&adv_param, NULL, 0, NULL, 0);
     } else {
         is_bonded = false;

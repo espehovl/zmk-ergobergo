@@ -1,0 +1,102 @@
+#include <behaviors.dtsi>
+#include <dt-bindings/zmk/keys.h>
+#include <dt-bindings/zmk/bt.h>
+#include <dt-bindings/zmk/pointing.h>
+
+/*
+ * Encoder -> HID mouse wheel scroll (needs CONFIG_ZMK_POINTING=y on the board — see xiao_mg24_zmk_defconfig).
+ * Mouse actions all share the same stack: bind keys to &msc (scroll), &mmv (move), &mkp (buttons);
+ * macros are in pointing.h — see docs/keymaps/behaviors/mouse-emulation.md.
+ * Swap the two MOVE_Y values in sensor-bindings if scroll direction feels inverted.
+ */
+
+#define BASE  0
+#define RED   1
+#define BLUE  2
+#define HYPER 3
+
+#define NO_AE    APOSTROPHE
+#define NO_OE    SEMICOLON
+#define NO_AA    LEFT_BRACKET
+#define NO_AT    BACKSLASH
+#define NO_MINUS SLASH
+#define NO_PLUS  MINUS
+#define NO_APO   NON_US_BACKSLASH
+
+/ {
+    behaviors {
+        /* Each detent: press &msc at a wheel speed setpoint, hold for tap-ms, release.
+         * Wheel-ticks-per-detent ~= MOVE_Y(...) * tap-ms / 1000  (&msc has no accel by default).
+         * Bump MOVE_Y(...) in sensor-bindings or tap-ms here for bigger scroll per detent. */
+        wheel_msc: wheel_msc {
+            compatible = "zmk,behavior-sensor-rotate-var";
+            #sensor-binding-cells = <2>;
+            bindings = <&msc>, <&msc>;
+            tap-ms = <80>;
+        };
+    };
+
+    /* Hold left inner thumb (BLUE) + right inner thumb (RED) → HYPER auto-activates.
+     * Conditional layers spec lists which momentary layers must all be active for the then-layer
+     * to turn on; release either thumb and HYPER drops back. */
+    conditional_layers {
+        compatible = "zmk,conditional-layers";
+        hyper_when_both {
+            if-layers = <BLUE RED>;
+            then-layer = <HYPER>;
+        };
+    };
+
+    keymap {
+        compatible = "zmk,keymap";
+        default_layer {
+            bindings = <
+                &kp NO_APO  &kp N1   &kp N2  &kp N3  &kp N4    &kp N5                            &kp N6     &kp N7    &kp N8     &kp N9      &kp N0        &kp NO_PLUS
+                &kp TAB     &kp Q    &kp W   &kp E   &kp R     &kp T                             &kp Y      &kp U     &kp I      &kp O       &kp P         &kp NO_AA
+                &kp LSHFT   &kp A    &kp S   &kp D   &kp F     &kp G                             &kp H      &kp J     &kp K      &kp L       &kp NO_OE     &kp NO_AE
+                &kp LCTRL   &kp Z    &kp X   &kp C   &kp V     &kp B                    &kp RET  &kp N      &kp M     &kp COMMA  &kp PERIOD  &kp NO_MINUS  &kp NO_AT
+                                                     &kp BSPC  &kp LCMD  &kp HOME       &kp END  &kp SPACE  &kp RALT
+                                                                         &mo BLUE       &mo RED
+            >;
+
+            sensor-bindings = <&wheel_msc MOVE_Y(40) MOVE_Y(-40)>;
+        };
+
+        /* RED — nav + arrows on the right hand, function keys on the left number row. */
+        red_layer {
+            bindings = <
+                &trans      &kp F1   &kp F2  &kp F3  &kp F4    &kp F5                             &kp F6     &kp F7    &kp F8     &kp F9      &kp F10       &kp F11
+                &trans      &trans   &trans  &trans  &trans    &trans                             &kp HOME   &kp PG_DN &kp PG_UP  &kp END     &trans        &kp F12
+                &trans      &trans   &trans  &trans  &trans    &trans                             &kp LEFT   &kp DOWN  &kp UP     &kp RIGHT   &trans        &trans
+                &trans      &trans   &trans  &trans  &trans    &trans                    &trans   &trans     &trans    &trans     &trans      &trans        &trans
+                                                     &kp DEL   &trans    &trans          &kp ESC  &kp RET    &trans
+                                                                         &trans          &trans
+            >;
+        };
+
+        /* BLUE — symbols on the right hand. Mirrors a typical sym-layer; tweak to taste. */
+        blue_layer {
+            bindings = <
+                &trans      &trans   &trans  &trans  &trans    &trans                             &trans     &trans    &trans     &trans      &trans        &trans
+                &trans      &trans   &trans  &trans  &trans    &trans                             &kp CARET  &kp AMPS  &kp STAR   &kp LPAR    &kp RPAR      &trans
+                &trans      &trans   &trans  &trans  &trans    &trans                             &kp MINUS  &kp EQUAL &kp LBRC   &kp RBRC    &kp PIPE      &kp GRAVE
+                &trans      &trans   &trans  &trans  &trans    &trans                    &kp ESC  &kp UNDER  &kp PLUS  &kp LBKT   &kp RBKT    &kp BSLH      &kp TILDE
+                                                     &kp DEL   &trans    &kp ESC         &trans   &kp RET    &trans
+                                                                         &trans          &trans
+            >;
+        };
+
+        /* HYPER — Bluetooth profile management + bootloader/reset. Auto-engaged when BLUE+RED
+         * are both held (see conditional_layers). Add system-level keys here later. */
+        hyper_layer {
+            bindings = <
+                &bt BT_CLR  &bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_SEL 3  &bt BT_SEL 4                         &none      &none     &none      &none       &none         &none
+                &none       &none         &none         &none         &none         &none                                &none      &none     &none      &none       &none         &none
+                &none       &none         &none         &none         &none         &none                                &none      &none     &none      &none       &none         &none
+                &sys_reset  &none         &none         &none         &none         &none                      &none     &none      &none     &none      &none       &none         &sys_reset
+                                                                      &none         &none    &none             &none     &none      &none
+                                                                                             &trans            &trans
+            >;
+        };
+    };
+};

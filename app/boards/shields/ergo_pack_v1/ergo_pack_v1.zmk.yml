@@ -1,0 +1,15 @@
+# Copyright (c) 2026 The ZMK Contributors
+# SPDX-License-Identifier: MIT
+
+file_format: "1"
+id: ergo_pack_v1
+name: ErgoPack v1
+type: shield
+requires: 
+  - seeed_xiao
+features:
+  - keys
+  - encoder
+siblings:
+  - ergo_pack_v1_left
+  - ergo_pack_v1_right

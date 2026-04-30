@@ -1,0 +1,97 @@
+# SPDX-License-Identifier: MIT
+# Silicon Labs BLE: run once in the ZMK repo before first MG24 build:
+#   west blobs fetch hal_silabs
+#
+# NOTE: a Zephyr "board variant" defconfig REPLACES the base
+# xiao_mg24_defconfig - it is not merged on top. So we must re-declare every
+# essential symbol the upstream board enables (ARM_MPU, SERIAL, CONSOLE,
+# UART_CONSOLE, GPIO) here, otherwise they are silently disabled and the
+# image looks like it boots but the radio/console/MPU never come up.
+
+# --- Pulled from upstream xiao_mg24_defconfig ---
+CONFIG_ARM_MPU=y
+CONFIG_HW_STACK_PROTECTION=y
+CONFIG_GPIO=y
+
+# Zephyr gpio_gecko (Series 2) does not support level-triggered GPIO
+# interrupts; matrix kscan defaults to GPIO_INT_LEVEL_ACTIVE which returns
+# -ENOTSUPP. Poll the matrix instead (tiny idle cost vs. EXTI).
+CONFIG_ZMK_KSCAN_MATRIX_POLLING=y
+
+CONFIG_SERIAL=y
+CONFIG_CONSOLE=y
+CONFIG_UART_CONSOLE=y
+
+# --- Logging (enable so boot/BLE failures are visible on the console) ---
+CONFIG_LOG=y
+CONFIG_LOG_MODE_DEFERRED=y
+CONFIG_LOG_DEFAULT_LEVEL=3
+
+# --- HID ---
+# Allows full consumer usage IDs where needed (e.g. legacy C_AC_SCROLL_*, extended media keys).
+CONFIG_ZMK_HID_CONSUMER_REPORT_USAGES_FULL=y
+
+# Composite HID keyboard + pointing: mouse wheel, movement, buttons (&msc / &mmv / &mkp).
+# Encoder scroll uses SCRL_* + ZMK HID mouse report — refresh host BLE pairing/cache if HID behaved oddly before.
+CONFIG_ZMK_POINTING=y
+
+# Smooth scrolling exposes a Resolution Multiplier feature report (HID 0x238) and divides wheel
+# deltas client-side. macOS in particular drops or clamps plain wheel reports without it; with the
+# multiplier honored it accepts every report. Side effect: HID descriptor changes again, so the
+# host (especially macOS Bluetooth daemon) needs to re-pair after this flips on.
+CONFIG_ZMK_POINTING_SMOOTH_SCROLLING=y
+
+# --- ZMK transport ---
+CONFIG_ZMK_BLE=y
+
+# Force the host to use the LE Extended Advertising HCI commands
+# (HCI_LE_Set_Extended_Advertising_Data 0x2037) instead of the legacy
+# command (HCI_LE_Set_Advertising_Data 0x2006). The Silicon Labs xg24
+# Bluetooth controller blob (liblinklayer.a) does NOT export a handler
+# for the legacy adv-data command - only ll_hciCmdSetExtendedAdvertisingData
+# is defined - so legacy bt_le_adv_start() always returns
+# "packet_too_long" (HCI status 0x45) on the peripheral half. Selecting
+# extended advertising routes the host through the ext-adv path that the
+# controller actually implements.
+CONFIG_BT_EXT_ADV=y
+
+# Silicon Labs BT controller uses link-layer prio as a meta-IRQ (see hci_silabs_efr32.c)
+CONFIG_NUM_METAIRQ_PRIORITIES=1
+
+# ZMK enables many BT host features (DIS, BAS, GATT client/caching, central +
+# peripheral, large data length, multiple paired devices). The default
+# Silicon Labs link-layer memory pool of 6 KiB is way too small. With 24 KiB
+# the controller boots and scans on the central, but on the peripheral
+# `LE Set Advertising Data` (HCI 0x2006) returns 0x45 "Memory Capacity
+# Exceeded" because no buffer can be carved for an advertising set. 32 KiB
+# clears both halves with headroom.
+CONFIG_BT_SILABS_EFR32_BUFFER_MEMORY=32768
+
+# The Silicon Labs link-layer carves its buffer pool out of the libc malloc
+# arena (sl_btctrl_init_mem -> bg_malloc -> sl_malloc -> malloc). Zephyr's
+# default CONFIG_COMMON_LIBC_MALLOC_ARENA_SIZE is only 8 KiB, which causes
+# malloc(BUFFER_MEMORY) to fail and sl_btctrl_init_mem() to return 0
+# ("Failed to allocate memory 0", -ENOMEM from the HCI driver, no
+# advertising). Size the arena to fit the controller pool plus a healthy
+# margin for libc internal bookkeeping and any other malloc users.
+CONFIG_COMMON_LIBC_MALLOC_ARENA_SIZE=40960
+
+# --- Settings storage ---
+CONFIG_MPU_ALLOW_FLASH_WRITE=y
+CONFIG_NVS=y
+CONFIG_SETTINGS_NVS=y
+CONFIG_FLASH=y
+CONFIG_FLASH_PAGE_LAYOUT=y
+CONFIG_FLASH_MAP=y
+# The upstream xiao_mg24.dts gives storage_partition only 16 KiB (2 x 8 KiB
+# flash pages). Default CONFIG_SETTINGS_NVS_SECTOR_COUNT is 8, so NVS init
+# would fail at boot ("partition too small"), zmk_ble_complete_startup is
+# never reached, and advertising never starts. Cap it at 2 to match the
+# partition.
+CONFIG_SETTINGS_NVS_SECTOR_COUNT=2
+
+
+# Direct-flash build (no MCUboot). Link the application at the start of flash
+# instead of slot0_partition (which the upstream board points to for chain-load).
+# CONFIG_USE_DT_CODE_PARTITION is intentionally NOT set; we also clear
+# zephyr,code-partition in xiao_mg24_zmk.dts to make this explicit.

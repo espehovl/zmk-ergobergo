@@ -1,0 +1,27 @@
+/*
+ * Copyright (c) 2026 The ZMK Contributors
+ *
+ * SPDX-License-Identifier: MIT
+ */
+
+#include <../boards/seeed/xiao_mg24/xiao_mg24.dts>
+
+/*
+ * Console stays on the upstream-chosen usart0 (PA8/PA9), which on the XIAO
+ * MG24 is wired to the on-board SAMD11 USB-CDC bridge. xiao_serial (eusart1)
+ * goes to header pins PC6/PC7 and we don't need it for split or BLE, so
+ * leave it disabled (default) to save power.
+ */
+
+/*
+ * The upstream board is set up for a chain-loaded layout (mcuboot @ 0x0,
+ * app @ slot0_partition = 0x0c000). For ZMK we direct-flash the app at the
+ * start of flash, so clear zephyr,code-partition. Combined with the absence
+ * of CONFIG_USE_DT_CODE_PARTITION in our defconfig, the application is
+ * linked starting at the base of flash0 (0x0).
+ */
+/ {
+    chosen {
+        /delete-property/ zephyr,code-partition;
+    };
+};

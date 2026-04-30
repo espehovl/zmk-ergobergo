@@ -1,0 +1,5 @@
+# Copyright (c) 2026 The ZMK Contributors
+# SPDX-License-Identifier: MIT
+
+config BOARD_XIAO_MG24
+    select ZMK_BOARD_COMPAT if BOARD_XIAO_MG24_EFR32MG24B220F1536IM48_ZMK
