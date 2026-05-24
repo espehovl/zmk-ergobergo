@@ -65,8 +65,8 @@
         /* RED — nav + arrows on the right hand, function keys on the left number row. */
         red_layer {
             bindings = <
-                &trans      &kp F1   &kp F2  &kp F3  &kp F4    &kp F5                             &kp F6     &kp F7    &kp F8     &kp F9      &kp F10       &kp F11
-                &trans      &trans   &trans  &trans  &trans    &trans                             &kp HOME   &kp PG_DN &kp PG_UP  &kp END     &trans        &kp F12
+                &trans      &trans   &trans  &trans  &trans    &trans                             &trans     &trans    &trans     &trans      &trans        &trans
+                &trans      &trans   &trans  &trans  &trans    &trans                             &trans     &trans    &trans     &trans      &trans        &trans
                 &trans      &trans   &trans  &trans  &trans    &trans                             &kp LEFT   &kp DOWN  &kp UP     &kp RIGHT   &trans        &trans
                 &trans      &trans   &trans  &trans  &trans    &trans                    &trans   &trans     &trans    &trans     &trans      &trans        &trans
                                                      &kp DEL   &trans    &trans          &kp ESC  &kp RET    &trans
@@ -77,10 +77,10 @@
         /* BLUE — symbols on the right hand. Mirrors a typical sym-layer; tweak to taste. */
         blue_layer {
             bindings = <
-                &trans      &trans   &trans  &trans  &trans    &trans                             &trans     &trans    &trans     &trans      &trans        &trans
-                &trans      &trans   &trans  &trans  &trans    &trans                             &kp CARET  &kp AMPS  &kp STAR   &kp LPAR    &kp RPAR      &trans
-                &trans      &trans   &trans  &trans  &trans    &trans                             &kp MINUS  &kp EQUAL &kp LBRC   &kp RBRC    &kp PIPE      &kp GRAVE
-                &trans      &trans   &trans  &trans  &trans    &trans                    &kp ESC  &kp UNDER  &kp PLUS  &kp LBKT   &kp RBKT    &kp BSLH      &kp TILDE
+                &trans      &kp F1   &kp F2  &kp F3  &kp F4    &kp F5                             &trans     &trans    &trans     &trans      &trans        &trans
+                &trans      &kp F6   &kp F7  &kp F8  &kp F9    &kp F10                            &trans     &trans    &trans     &trans      &trans        &trans
+                &trans      &kp F11  &kp F12 &kp F13 &kp F14   &kp F15                            &kp LEFT   &kp DOWN  &kp UP     &kp RIGHT   &trans        &trans
+                &trans      &kp F16  &kp F17 &kp F18 &kp F19   &kp F20                            &trans     &trans    &trans     &trans      &trans        &trans
                                                      &kp DEL   &trans    &kp ESC         &trans   &kp RET    &trans
                                                                          &trans          &trans
             >;
