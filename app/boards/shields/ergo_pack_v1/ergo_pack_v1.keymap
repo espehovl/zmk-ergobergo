@@ -68,12 +68,12 @@
         default_layer {
             display-name = "Base";
             bindings = <
-                &kp NO_APO  &kp N1   &kp N2  &kp N3  &kp N4    &kp N5                            &kp N6     &kp N7    &kp N8     &kp N9      &kp N0        &kp NO_PLUS
-                &kp TAB     &kp Q    &kp W   &kp E   &kp R     &kp T                             &kp Y      &kp U     &kp I      &kp O       &kp P         &kp NO_AA
-                &kp LSHFT   &hm LSHFT A  &hm LCTRL S  &hm LALT D  &hm LGUI F  &kp G              &kp H      &hm RGUI J  &hm RALT K  &hm RCTRL L  &hm RSHFT NO_OE  &kp NO_AE
-                &kp LCTRL   &kp Z    &kp X   &kp C   &kp V     &kp B                    &kp RET  &kp N      &kp M     &kp COMMA  &kp PERIOD  &kp NO_MINUS  &kp NO_AT
-                                                     &kp BSPC  &kp LCMD  &kp HOME       &kp END  &kp SPACE  &kp RALT
-                                                                         &mo BLUE       &mo RED
+                &kp NO_APO  &kp N1       &kp N2       &kp N3      &kp N4      &kp N5                            &kp N6     &kp N7      &kp N8      &kp N9       &kp N0           &kp NO_PLUS
+                &kp TAB     &kp Q        &kp W        &kp E       &kp R       &kp T                             &kp Y      &kp U       &kp I       &kp O        &kp P            &kp NO_AA
+                &kp LSHFT   &hm LSHFT A  &hm LCTRL S  &hm LALT D  &hm LGUI F  &kp G                             &kp H      &hm RGUI J  &hm RALT K  &hm RCTRL L  &hm RSHFT NO_OE  &kp NO_AE
+                &kp LCTRL   &kp Z        &kp X        &kp C       &kp V       &kp B                    &kp RET  &kp N      &kp M       &kp COMMA   &kp PERIOD   &kp NO_MINUS     &kp NO_AT
+                                                                  &kp BSPC    &kp LCMD  &kp HOME       &kp END  &kp SPACE  &kp RALT
+                                                                                        &mo BLUE       &mo RED
             >;
 
             sensor-bindings = <&wheel_msc MOVE_Y(40) MOVE_Y(-40)>;
