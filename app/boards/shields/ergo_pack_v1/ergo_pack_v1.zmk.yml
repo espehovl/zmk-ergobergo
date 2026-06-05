@@ -10,6 +10,7 @@ requires:
 features:
   - keys
   - encoder
+  - studio
 siblings:
   - ergo_pack_v1_left
   - ergo_pack_v1_right

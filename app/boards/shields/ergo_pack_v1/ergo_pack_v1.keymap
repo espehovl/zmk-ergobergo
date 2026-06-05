@@ -1,3 +1,8 @@
+/* Keep every built-in behavior compiled in so ZMK Studio can offer the full set
+ * when reassigning keys. Without this, only behaviors referenced below survive
+ * the dead-code pass and Studio's behavior picker is sparse. */
+#define ZMK_BEHAVIORS_KEEP_ALL
+
 #include <behaviors.dtsi>
 #include <dt-bindings/zmk/keys.h>
 #include <dt-bindings/zmk/bt.h>
@@ -61,13 +66,14 @@
     keymap {
         compatible = "zmk,keymap";
         default_layer {
+            display-name = "Base";
             bindings = <
-                &kp NO_APO  &kp N1   &kp N2  &kp N3  &kp N4    &kp N5                            &kp N6     &kp N7    &kp N8     &kp N9      &kp N0        &kp NO_PLUS
-                &kp TAB     &kp Q    &kp W   &kp E   &kp R     &kp T                             &kp Y      &kp U     &kp I      &kp O       &kp P         &kp NO_AA
-                &kp LSHFT   &hm LSHFT A  &hm LCTRL S  &hm LALT D  &hm LGUI F  &kp G              &kp H      &hm RGUI J  &hm RALT K  &hm RCTRL L  &hm RSHFT NO_OE  &kp NO_AE
-                &kp LCTRL   &kp Z    &kp X   &kp C   &kp V     &kp B                    &kp RET  &kp N      &kp M     &kp COMMA  &kp PERIOD  &kp NO_MINUS  &kp NO_AT
-                                                     &kp BSPC  &kp LCMD  &kp HOME       &kp END  &kp SPACE  &kp RALT
-                                                                         &mo BLUE       &mo RED
+                &kp NO_APO  &kp N1       &kp N2       &kp N3      &kp N4      &kp N5                            &kp N6     &kp N7      &kp N8      &kp N9       &kp N0           &kp NO_PLUS
+                &kp TAB     &kp Q        &kp W        &kp E       &kp R       &kp T                             &kp Y      &kp U       &kp I       &kp O        &kp P            &kp NO_AA
+                &kp LSHFT   &hm LSHFT A  &hm LCTRL S  &hm LALT D  &hm LGUI F  &kp G                             &kp H      &hm RGUI J  &hm RALT K  &hm RCTRL L  &hm RSHFT NO_OE  &kp NO_AE
+                &kp LCTRL   &kp Z        &kp X        &kp C       &kp V       &kp B                    &kp RET  &kp N      &kp M       &kp COMMA   &kp PERIOD   &kp NO_MINUS     &kp NO_AT
+                                                                  &kp BSPC    &kp LCMD  &kp HOME       &kp END  &kp SPACE  &kp RALT
+                                                                                        &mo BLUE       &mo RED
             >;
 
             sensor-bindings = <&wheel_msc MOVE_Y(40) MOVE_Y(-40)>;
@@ -75,6 +81,7 @@
 
         /* RED — nav + arrows on the right hand, function keys on the left number row. */
         red_layer {
+            display-name = "Red";
             bindings = <
                 &trans      &trans   &trans  &trans  &trans    &trans                             &trans     &trans    &trans     &trans      &trans        &trans
                 &trans      &trans   &trans  &trans  &trans    &trans                             &trans     &trans    &trans     &trans      &trans        &trans
@@ -87,6 +94,7 @@
 
         /* BLUE — symbols on the right hand. Mirrors a typical sym-layer; tweak to taste. */
         blue_layer {
+            display-name = "Blue";
             bindings = <
                 &trans      &kp F1   &kp F2  &kp F3  &kp F4    &kp F5                             &trans     &trans    &trans     &trans      &trans        &trans
                 &trans      &kp F6   &kp F7  &kp F8  &kp F9    &kp F10                            &trans     &trans    &trans     &trans      &trans        &trans
@@ -100,6 +108,7 @@
         /* HYPER — Bluetooth profile management + bootloader/reset. Auto-engaged when BLUE+RED
          * are both held (see conditional_layers). Add system-level keys here later. */
         hyper_layer {
+            display-name = "Hyper";
             bindings = <
                 &bt BT_CLR  &bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_SEL 3  &bt BT_SEL 4                         &none      &none     &none      &none       &none         &none
                 &none       &none         &none         &none         &none         &none                                &none      &none     &none      &none       &none         &none
