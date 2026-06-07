@@ -68,7 +68,7 @@
         };
     };
 
-    indicators {
+    indicators: indicators {
         compatible = "zmk,indicator-leds";
 
         caps_lock_indicator: caps_lock {

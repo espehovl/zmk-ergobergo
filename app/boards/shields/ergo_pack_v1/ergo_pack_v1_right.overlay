@@ -31,6 +31,10 @@
     status = "disabled";
 };
 
+&indicators {
+    status = "disabled";
+};
+
 &caps_lock_indicator {
     status = "disabled";
 };
