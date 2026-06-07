@@ -26,3 +26,11 @@
      * (40+) saturate the queue and feel slow/laggy rather than smoother. */
     triggers-per-rotation = <20>;
 };
+
+&caps_lock_led {
+    status = "disabled";
+};
+
+&caps_lock_indicator {
+    status = "disabled";
+};
