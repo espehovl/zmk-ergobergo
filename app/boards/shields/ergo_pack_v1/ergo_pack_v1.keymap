@@ -30,16 +30,6 @@
 
 / {
     behaviors {
-        /* Each detent: press &msc at a wheel speed setpoint, hold for tap-ms, release.
-         * Wheel-ticks-per-detent ~= MOVE_Y(...) * tap-ms / 1000  (&msc has no accel by default).
-         * Bump MOVE_Y(...) in sensor-bindings or tap-ms here for bigger scroll per detent. */
-        wheel_msc: wheel_msc {
-            compatible = "zmk,behavior-sensor-rotate-var";
-            #sensor-binding-cells = <2>;
-            bindings = <&msc>, <&msc>;
-            tap-ms = <80>;
-        };
-
         /* Homerow mods: tap-preferred so the mod only fires if the homerow key is
          * actually held past tapping-term-ms. Fast roll-over typing stays as taps. */
         hm: homerow_mods {
@@ -49,6 +39,30 @@
             tapping-term-ms = <200>;
             quick-tap-ms = <175>;
             bindings = <&kp>, <&kp>;
+        };
+
+        tab_next: tab_next {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings =
+                <&macro_press &kp LCTRL>
+                , <&macro_tap &kp TAB>
+                , <&macro_release &kp LCTRL>;
+        };
+
+        tab_prev: tab_prev {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings =
+                <&macro_press &kp LCTRL &kp LSHIFT>
+                , <&macro_tap &kp TAB>
+                , <&macro_release &kp LSHIFT &kp LCTRL>;
+        };
+
+        tab_rot: tab_rot {
+            compatible = "zmk,behavior-sensor-rotate";
+            #sensor-binding-cells = <0>;
+            bindings = <&tab_next>, <&tab_prev>;
         };
     };
 
@@ -76,7 +90,7 @@
                                                                                         &mo BLUE       &mo RED
             >;
 
-            sensor-bindings = <&wheel_msc MOVE_Y(40) MOVE_Y(-40)>;
+            sensor-bindings = <&inc_dec_kp RIGHT LEFT>;
         };
 
         /* RED — nav + arrows on the right hand, function keys on the left number row. */
@@ -103,6 +117,8 @@
                                                      &kp DEL   &trans    &kp ESC         &trans   &kp RET    &trans
                                                                          &trans          &trans
             >;
+
+            sensor-bindings = <&tab_rot>;
         };
 
         /* HYPER — Bluetooth profile management + bootloader/reset. Auto-engaged when BLUE+RED
@@ -110,11 +126,11 @@
         hyper_layer {
             display-name = "Hyper";
             bindings = <
-                &bt BT_CLR  &bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_SEL 3  &bt BT_SEL 4                         &none      &none     &none      &none       &none         &none
-                &none       &none         &none         &none         &none         &none                                &none      &none     &none      &none       &none         &none
-                &none       &none         &none         &none         &none         &none                                &none      &none     &none      &none       &none         &none
-                &sys_reset  &none         &none         &none         &none         &none                      &none     &none      &none     &none      &none       &none         &sys_reset
-                                                                      &none         &none    &none             &none     &none      &none
+                &bt BT_CLR  &bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_SEL 3  &bt BT_SEL 4                         &none          &none  &none      &none         &none            &none
+                &none       &none         &none         &none         &none         &none                                &none          &none  &none      &none         &none            &none
+                &none       &none         &none         &none         &mkp LCLK     &mkp RCLK                            &mmv MOVE_LEFT &mmv   MOVE_DOWN  &mmv MOVE_UP  &mmv MOVE_RIGHT  &none         &none
+                &sys_reset  &none         &none         &none         &none         &none                      &none     &none          &none  &none      &none         &none            &sys_reset
+                                                                      &none         &none    &none             &none     &none          &none
                                                                                              &trans            &trans
             >;
         };
